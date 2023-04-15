@@ -3,7 +3,7 @@ import React from 'react'
 
 type ContainerProps = React.HTMLAttributes<HTMLDivElement>
 
-const CONTAINER_CLASSES = 'w-full max-w-screen-xl px-8 mx-auto'
+const CONTAINER_CLASSES = 'w-full max-w-screen-md px-8 mx-auto'
 
 export const Container: React.FC<ContainerProps> = (props) => {
     const { className: propsClass, ...restProps } = props
