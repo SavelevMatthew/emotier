@@ -6,7 +6,10 @@ import { Button } from './button'
 
 export const AuthAction: React.FC = () => {
     const { isLoaded, isSignedIn } = useAuth()
-    if (!isLoaded || !isSignedIn) {
+
+    if (!isLoaded) return null
+
+    if (!isSignedIn) {
         return (
             <SignInButton>
                 <Button>

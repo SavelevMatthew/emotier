@@ -14,7 +14,7 @@ const createInnerTRPCContext = (_opts: CreateContextOptions) => {
     }
 }
 
-const createTRPCContext = (_opts: CreateNextContextOptions) => {
+export const createTRPCContext = (_opts: CreateNextContextOptions) => {
     return createInnerTRPCContext({})
 }
 
