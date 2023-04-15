@@ -1,6 +1,7 @@
-import { Header } from '@/components/header'
 import { ClerkProvider } from '@clerk/nextjs/app-beta'
 import { Inter } from 'next/font/google'
+
+import { Header } from '@/components/header'
 
 import type { Metadata } from 'next'
 

@@ -442,6 +442,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@trpc/client@npm:^10.20.0":
+  version: 10.20.0
+  resolution: "@trpc/client@npm:10.20.0"
+  peerDependencies:
+    "@trpc/server": 10.20.0
+  checksum: 28e576f8752c35fec038772cfda33c8c1e83735bb41711df1164ba5ca7fe7f8cad12a791c8ce3f9d9a6b19cf603791e35a7fab2e5bdb0a196a85fa0d2fbddec6
+  languageName: node
+  linkType: hard
+
+"@trpc/server@npm:^10.20.0":
+  version: 10.20.0
+  resolution: "@trpc/server@npm:10.20.0"
+  checksum: a06b8053cbd6340fb3bffbcd1ae70fa8b7ec4e162be4dafbefe545362f9232e282949c938503b5b497a06ae91243fa347cb3207e3d7373da90be4bae858aa4a6
+  languageName: node
+  linkType: hard
+
 "@types/body-parser@npm:*":
   version: 1.19.2
   resolution: "@types/body-parser@npm:1.19.2"
@@ -1495,6 +1511,8 @@ __metadata:
   dependencies:
     "@clerk/nextjs": ^4.16.2
     "@prisma/client": ^4.12.0
+    "@trpc/client": ^10.20.0
+    "@trpc/server": ^10.20.0
     "@types/node": 18.15.11
     "@types/react": 18.0.35
     "@types/react-dom": 18.0.11
