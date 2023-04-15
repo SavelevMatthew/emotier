@@ -5,12 +5,12 @@ const server = z.object({
     SHADOW_DATABASE_URL: z.string().min(1),
     NODE_ENV: z.enum(['development', 'production', 'test']),
     CLERK_SECRET_KEY: z.string(),
-    VERCEL_URL: z.string().optional(),
     PORT: z.string().optional()
 })
 
 const client = z.object({
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string(),
+    VERCEL_URL: z.string().optional(),
 })
 
 const merged = server.merge(client)
