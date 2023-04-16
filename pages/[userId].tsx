@@ -1,9 +1,7 @@
-import { createServerSideHelpers } from '@trpc/react-query/server'
 import Error from 'next/error'
 import { Inter } from 'next/font/google'
 import Head from 'next/head'
 import React from 'react'
-import superJson from 'superjson'
 
 import { trpc } from '@/client/trpc'
 import { Container } from '@/components/container'
@@ -11,8 +9,7 @@ import { Header } from '@/components/header'
 import { Loader } from '@/components/loader'
 import { PostView } from '@/components/post-view'
 import { ProfileOverview } from '@/components/profile-overview'
-import { appRouter } from '@/server/api/root'
-import { prisma } from '@/server/db'
+import { generateSSGHelper } from '@/server/helpers/ssg'
 
 import type { GetStaticProps, GetStaticPaths, NextPage } from 'next'
 
@@ -83,15 +80,10 @@ const UserPage: NextPage<UserPageProps> = ({ userId }) => {
 export default UserPage
 
 export const getStaticProps: GetStaticProps = async (context) => {
-    const ssg = createServerSideHelpers({
-        router: appRouter,
-        // TODO: fetch userId if needed later
-        ctx: { prisma, userId: null },
-        transformer: superJson,
-    })
+    const ssg = generateSSGHelper()
 
     const userId = context.params?.userId
-
+ 
     if (!userId || Array.isArray(userId)) return {
         notFound: true,
     }

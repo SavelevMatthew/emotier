@@ -38,6 +38,21 @@ const addAuthorsToPosts = async (posts: Array<Post>) => {
     }))
 }
 
+const addAuthorsToPost = async (post: Post | null) => {
+    if (!post) {
+        return post
+    }
+
+    const [author] = await clerkClient.users.getUserList({
+        userId: [post.authorId],
+    })
+
+    return {
+        post,
+        author: author ? filterUser(author) : null,
+    }
+}
+
 export const postRouter = createTRPCRouter({
     getAll: publicProcedure.query(async ({ ctx }) => {
         const posts = await ctx.prisma.post.findMany({
@@ -61,6 +76,15 @@ export const postRouter = createTRPCRouter({
             })
 
             return addAuthorsToPosts(posts)
+        }),
+    getById: publicProcedure
+        .input(z.object({ id: z.string() }))
+        .query( async ({ ctx, input }) => {
+            const post = await ctx.prisma.post.findUnique({
+                where: { id: input.id },
+            })
+
+            return addAuthorsToPost(post)
         }),
     create: privateProcedure
         .input(z.object({
