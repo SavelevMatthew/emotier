@@ -26,7 +26,7 @@ export const PostView: React.FC<PostWithUser> = ({ post, author }) => {
                     <Link href={`/${author.id}`}>
                         <span className='font-medium hover:underline transition-all cursor-pointer'>{author.name}</span>
                     </Link>
-                    <Link href={`/post/${post.id}`}>
+                    <Link href={`/post/${post.id}`}  className='leading-4'>
                         <span className='text-gray-600 hover:underline transition-all text-xs'>{dayjs(post.createdAt).fromNow()}</span>
                     </Link>
                 </div>
