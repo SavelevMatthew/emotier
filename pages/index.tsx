@@ -6,12 +6,13 @@ import { trpc } from '@/client/trpc'
 import { Container } from '@/components/container'
 import { CreateWizard } from '@/components/create-wizard'
 import { Header } from '@/components/header'
+import { Loader } from '@/components/loader'
 import { PostView } from '@/components/post-view'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function IndexPage () {
-    const { data } = trpc.post.getAll.useQuery()
+    const { data, isLoading } = trpc.post.getAll.useQuery()
 
     return (
         <>
@@ -23,6 +24,11 @@ export default function IndexPage () {
                 <Container className='py-10 flex flex-col gap-y-10'>
                     <CreateWizard/>
                     <h1 className='font-semibold text-xl text-gray-600'>Latest emotes:</h1>
+                    {isLoading && (
+                        <div className='flex justify-center' >
+                            <Loader/>
+                        </div>
+                    )}
                     {data?.map(post => (
                         <PostView key={post.post.id} {...post}/>
                     ))}
