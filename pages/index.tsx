@@ -29,9 +29,11 @@ export default function IndexPage () {
                             <Loader/>
                         </div>
                     )}
-                    {data?.map(post => (
-                        <PostView key={post.post.id} {...post}/>
-                    ))}
+                    <div className='flex flex-col gap-y-4'>
+                        {data?.map(post => (
+                            <PostView key={post.post.id} {...post}/>
+                        ))}
+                    </div>
                 </Container>
             </main>
         </>

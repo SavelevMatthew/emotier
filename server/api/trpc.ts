@@ -1,21 +1,20 @@
-import { initTRPC } from '@trpc/server'
+import { getAuth } from '@clerk/nextjs/server'
+import { initTRPC, TRPCError } from '@trpc/server'
 import superJson from 'superjson'
 import { ZodError } from 'zod'
 
 import { prisma } from '@/server/db'
 
-import type { CreateNextContextOptions } from '@trpc/server/adapters/next'
+import type {  CreateNextContextOptions } from '@trpc/server/adapters/next'
+export const createTRPCContext = (opts: CreateNextContextOptions) => {
+    const { req } = opts
+    const session = getAuth(req)
+    const userId = session.userId
 
-type CreateContextOptions = Record<string, never>
-
-const createInnerTRPCContext = (_opts: CreateContextOptions) => {
     return {
         prisma,
+        userId,
     }
-}
-
-export const createTRPCContext = (_opts: CreateNextContextOptions) => {
-    return createInnerTRPCContext({})
 }
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
@@ -33,3 +32,13 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
 
 export const createTRPCRouter = t.router
 export const publicProcedure = t.procedure
+
+const enforceAuth = t.middleware(async ({ ctx, next }) => {
+    if (!ctx.userId) {
+        throw new TRPCError({ code: 'UNAUTHORIZED' })
+    }
+
+    return next({ ctx: { userId: ctx.userId } })
+})
+
+export const privateProcedure = t.procedure.use(enforceAuth)
