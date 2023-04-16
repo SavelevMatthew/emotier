@@ -16,6 +16,8 @@ type PostUser = {
     profileImageUrl: string
 }
 
+const NUMERIC_REGEXP = /[0-9]+/
+
 // Rate limiting to accept no more than 3 request per minute
 const rateLimit = new Ratelimit({
     redis: Redis.fromEnv(),
@@ -60,7 +62,12 @@ export const postRouter = createTRPCRouter({
     }),
     create: privateProcedure
         .input(z.object({
-            content: z.string().emoji().min(1).max(140),
+            content: z
+                .string()
+                .min(1, 'Emote must contain at least 1 emoji')
+                .max(140, 'Seems like you\'re trying to write a long emoji poem, which is too long ')
+                .emoji('Only emojis are allowed')
+                .refine((value) =>  !NUMERIC_REGEXP.test(value), 'Numbers are not allowed'),
         }))
         .mutation(async ({ ctx, input }) => {
             const authorId = ctx.userId
