@@ -5,16 +5,9 @@ import { Redis } from '@upstash/redis'
 import { z } from 'zod'
 
 import { createTRPCRouter, privateProcedure, publicProcedure } from '@/server/api/trpc'
+import { filterUser, type FilteredUser } from '@/server/helpers/userFilter'
 
-import type { User } from '@clerk/nextjs/api'
-
-type PostUser = {
-    id: string
-    username: string | null
-    firstName: string | null
-    lastName: string | null
-    profileImageUrl: string
-}
+import type{ Post } from '@prisma/client'
 
 const NUMERIC_REGEXP = /[0-9]+/
 
@@ -31,13 +24,19 @@ const rateLimit = new Ratelimit({
     prefix: '@upstash/ratelimit',
 })
 
-const filterUser = (user: User) => ({
-    id: user.id,
-    username: user.username,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    profileImageUrl: user.profileImageUrl,
-})
+const addAuthorsToPosts = async (posts: Array<Post>) => {
+    const users = await clerkClient.users.getUserList({
+        userId: posts.map(post => post.authorId),
+    })
+    const userMap = new Map<string, FilteredUser>()
+    for (const user of users) {
+        userMap.set(user.id, filterUser(user))
+    }
+    return posts.map(post => ({
+        post,
+        author: userMap.get(post.authorId) || null,
+    }))
+}
 
 export const postRouter = createTRPCRouter({
     getAll: publicProcedure.query(async ({ ctx }) => {
@@ -47,19 +46,22 @@ export const postRouter = createTRPCRouter({
                 createdAt: 'desc',
             },
         })
-        const users = await clerkClient.users.getUserList({
-            userId: posts.map(post => post.authorId),
-        })
-        const userMap = new Map<string, PostUser>()
-        for (const user of users) {
-            userMap.set(user.id, filterUser(user))
-        }
 
-        return posts.map(post => ({
-            post,
-            author: userMap.get(post.authorId) || null,
-        }))
+        return addAuthorsToPosts(posts)
     }),
+    getByAuthorId: publicProcedure
+        .input(z.object({ id: z.string() }))
+        .query( async ({ ctx, input }) => {
+            const posts = await ctx.prisma.post.findMany({
+                where: { authorId: input.id },
+                orderBy: {
+                    createdAt: 'desc',
+                },
+                take: 100,
+            })
+
+            return addAuthorsToPosts(posts)
+        }),
     create: privateProcedure
         .input(z.object({
             content: z
