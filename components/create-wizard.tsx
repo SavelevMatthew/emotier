@@ -52,7 +52,7 @@ export const CreateWizard: React.FC = () => {
             <Image src={user.profileImageUrl} alt='your-avatar' width={IMG_SIZE} height={IMG_SIZE} className='rounded-full'/>
             <input
                 value={value}
-                className='outline-0 placeholder:opacity-50  focus:placeholder:opacity-0 text-3xl tracking-[0.25em] flex-1'
+                className='outline-0 placeholder:opacity-50  focus:placeholder:opacity-0 text-3xl tracking-[0.25em] flex-1 min-w-0'
                 placeholder={placeholder}
                 onChange={handleInputChange}
             />
