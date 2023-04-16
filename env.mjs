@@ -5,7 +5,9 @@ const server = z.object({
     SHADOW_DATABASE_URL: z.string().min(1),
     NODE_ENV: z.enum(['development', 'production', 'test']),
     CLERK_SECRET_KEY: z.string(),
-    PORT: z.string().optional()
+    PORT: z.string().optional(),
+    UPSTASH_REDIS_REST_URL: z.string(),
+    UPSTASH_REDIS_REST_TOKEN: z.string()
 })
 
 const client = z.object({
@@ -28,7 +30,9 @@ const processEnv = {
     CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
     VERCEL_URL: process.env.VERCEL_URL,
-    PORT: process.env.PORT
+    PORT: process.env.PORT,
+    UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
+    UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL
 }
 
 /** @typedef {z.input<typeof merged>} MergedInput */
