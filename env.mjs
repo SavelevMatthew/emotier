@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 const server = z.object({
     DATABASE_URL: z.string().min(1),
-    SHADOW_DATABASE_URL: z.string().min(1),
+    DIRECT_URL: z.string().min(1),
     NODE_ENV: z.enum(['development', 'production', 'test']),
     CLERK_SECRET_KEY: z.string(),
     PORT: z.string().optional(),
@@ -26,7 +26,7 @@ const merged = server.merge(client)
 const processEnv = {
     NODE_ENV: process.env.NODE_ENV,
     DATABASE_URL: process.env.DATABASE_URL,
-    SHADOW_DATABASE_URL: process.env.SHADOW_DATABASE_URL,
+    DIRECT_URL: process.env.DIRECT_URL,
     CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
     VERCEL_URL: process.env.VERCEL_URL,
