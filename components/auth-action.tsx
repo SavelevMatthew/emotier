@@ -1,11 +1,20 @@
 'use client'
 import { useAuth, SignInButton, SignOutButton } from '@clerk/nextjs'
-import React from 'react'
+import posthog from 'posthog-js'
+import React, { useEffect } from 'react'
 
 import { Button } from './button'
 
 export const AuthAction: React.FC = () => {
-    const { isLoaded, isSignedIn } = useAuth()
+    const { isLoaded, isSignedIn, userId } = useAuth()
+
+    useEffect(() => {
+        if (userId) {
+            posthog.identify('userId', {
+                id: userId,
+            })
+        }
+    }, [userId])
 
     if (!isLoaded) return null
 
