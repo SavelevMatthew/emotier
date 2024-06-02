@@ -10,9 +10,7 @@ export const AuthAction: React.FC = () => {
 
     useEffect(() => {
         if (userId) {
-            posthog.identify('userId', {
-                id: userId,
-            })
+            posthog.identify(userId)
         }
     }, [userId])
 
